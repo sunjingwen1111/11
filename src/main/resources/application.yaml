@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: demo
+  config:
+    import: optional:file:./application-local.yaml
+  datasource:
+    url: jdbc:mysql://192.168.8.142:3306/demo?characterEncoding=UTF-8&connectionTimeZone=Asia/Shanghai&connectTimeout=5000&socketTimeout=10000
+    username: root
+    password: ${DB_PASSWORD:}
+server:
+  port: 8080
+sa-token:
+  token-name: satoken
+  timeout: 86400
+  is-share: false
+  is-read-cookie: false
+  is-read-header: true
+  is-read-body: false
+  is-read-param: false

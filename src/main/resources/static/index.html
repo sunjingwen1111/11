@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>欢迎</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            color: #1f2937;
+            background: #f7f8fa;
+            font-family: "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        main {
+            width: min(560px, calc(100% - 32px));
+            padding: 32px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            text-align: center;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            margin: 0 0 24px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .messages {
+            height: 280px;
+            padding: 16px;
+            overflow-y: auto;
+            background: #f7f8fa;
+            border-radius: 12px;
+        }
+
+        .message {
+            width: fit-content;
+            max-width: 80%;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .message.user {
+            margin-left: auto;
+            color: #ffffff;
+            background: #2563eb;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.server {
+            color: #374151;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.error {
+            color: #b91c1c;
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        input {
+            min-width: 0;
+            flex: 1;
+            padding: 12px 14px;
+            font: inherit;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        button {
+            padding: 0 20px;
+            color: #ffffff;
+            font: inherit;
+            font-weight: 600;
+            background: #2563eb;
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .manage-link {
+            margin: 20px 0 0;
+            text-align: center;
+        }
+
+        .manage-link a {
+            color: #2563eb;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .manage-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<main>
+    <h1>欢迎你！</h1>
+    <p class="subtitle">系统已成功启动</p>
+
+    <section class="messages" id="messages" aria-live="polite">
+        <div class="message server">你好，请发送一条消息。</div>
+    </section>
+
+    <form id="message-form">
+        <input id="message-input" type="text" placeholder="请输入消息" autocomplete="off" aria-label="消息内容" required>
+        <button id="send-button" type="submit">发送</button>
+    </form>
+    <p class="manage-link"><a href="/users.html">进入用户管理 →</a></p>
+</main>
+
+<script src="/auth.js"></script>
+<script>
+    DemoAuth.requireLogin();
+    const form = document.querySelector("#message-form");
+    const input = document.querySelector("#message-input");
+    const button = document.querySelector("#send-button");
+    const messages = document.querySelector("#messages");
+
+    function addMessage(text, type) {
+        const message = document.createElement("div");
+        message.className = `message ${type}`;
+        message.textContent = text;
+        messages.appendChild(message);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const text = input.value.trim();
+        if (!text) return;
+
+        addMessage(text, "user");
+        input.value = "";
+        input.disabled = true;
+        button.disabled = true;
+        button.textContent = "发送中";
+
+        try {
+            const response = await DemoAuth.fetch("/api/messages", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({message: text})
+            });
+
+            if (!response.ok) throw new Error(`请求失败：${response.status}`);
+            addMessage(await response.text(), "server");
+        } catch (error) {
+            addMessage("发送失败，请稍后重试。", "server error");
+        } finally {
+            input.disabled = false;
+            button.disabled = false;
+            button.textContent = "发送";
+            input.focus();
+        }
+    });
+
+    input.focus();
+</script>
+</body>
+</html>

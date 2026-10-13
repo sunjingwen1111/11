@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录 · Demo</title>
+    <link rel="stylesheet" href="/login.css">
+    <script src="/auth.js" defer></script>
+    <script src="/login.js" defer></script>
+</head>
+<body>
+<main class="login-layout">
+    <section class="intro" aria-label="平台介绍">
+        <a class="brand" href="/login.html"><span class="brand-icon">D</span><span>Demo <small>控制台</small></span></a>
+        <div class="intro-content"><p class="eyebrow">WELCOME TO DEMO</p><h1>让日常管理<br>更简单一些。</h1><p>登录后即可管理系统用户和使用消息演示功能。</p></div>
+        <p class="intro-foot">DEMO PLATFORM · USER MANAGEMENT</p>
+    </section>
+    <section class="login-area" aria-labelledby="form-title">
+        <div class="form-card">
+            <div class="mobile-brand"><span class="brand-icon">D</span> Demo 控制台</div>
+            <p class="eyebrow">WELCOME BACK</p>
+            <h2 id="form-title">登录账号</h2>
+            <p class="form-subtitle" id="form-subtitle">使用账号和密码进入工作台</p>
+
+            <form id="auth-form">
+                <div id="name-field" class="field" hidden>
+                    <label for="register-name">用户姓名 <span class="optional">选填</span></label>
+                    <input id="register-name" name="name" type="text" maxlength="100" autocomplete="name" placeholder="请输入姓名">
+                </div>
+                <div class="field"><label for="account">登录账号</label><input id="account" name="account" type="text" maxlength="100" autocomplete="username" placeholder="请输入登录账号" required></div>
+                <div class="field"><label for="password">登录密码</label><input id="password" name="passwd" type="password" maxlength="100" autocomplete="current-password" placeholder="请输入密码" required></div>
+                <p id="auth-error" class="error" role="alert" hidden></p>
+                <button id="submit-auth" class="submit-button" type="submit">登 录 <span aria-hidden="true">→</span></button>
+            </form>
+            <div class="switch-mode"><span id="switch-hint">还没有账号？</span><button id="switch-button" type="button">注册用户</button></div>
+        </div>
+        <p class="bottom-note">用户数据由当前系统数据库提供</p>
+    </section>
+</main>
+</body>
+</html>

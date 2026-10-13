@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>用户管理 · Demo</title>
+    <link rel="stylesheet" href="/users.css">
+    <script src="/auth.js" defer></script>
+    <script src="/users.js" defer></script>
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+        <a class="brand" href="/users.html"><span class="brand-mark">D</span><span>Demo <small>控制台</small></span></a>
+        <div class="sidebar-label">工作空间</div>
+        <nav class="nav-links" aria-label="功能页面">
+            <a href="/users.html" class="nav-link active" aria-current="page"><span class="nav-icon">▦</span>用户管理</a>
+            <a href="/" class="nav-link"><span class="nav-icon">✉</span>消息演示</a>
+        </nav>
+        <div class="sidebar-foot"><span class="status-dot"></span>系统运行中</div>
+    </aside>
+
+    <div class="workspace">
+        <header class="topbar"><span class="crumb">系统管理 <span>/</span> 用户管理</span><div class="session-info"><span id="current-account" class="topbar-caption"></span><button id="logout-button" class="logout-button" type="button">退出登录</button></div></header>
+        <main class="content">
+            <div class="page-heading">
+                <div><p class="eyebrow">SYSTEM / USERS</p><h1>用户管理</h1><p class="page-description">查看和维护系统用户信息。</p></div>
+                <button class="button button-primary" id="add-user" type="button"><span aria-hidden="true">＋</span> 新增用户</button>
+            </div>
+
+            <section class="panel" aria-labelledby="table-title">
+                <div class="panel-head">
+                    <div><h2 id="table-title">用户列表 <span class="count-badge" id="user-count">0</span></h2><p>每页显示 20 条，按用户 ID 倒序排列</p></div>
+                    <button class="button button-subtle" id="refresh-users" type="button" aria-label="刷新列表">↻ <span>刷新</span></button>
+                </div>
+
+                <div id="list-state" class="list-state" role="status" aria-live="polite" hidden>
+                    <div class="state-illustration" aria-hidden="true">▦</div>
+                    <h3 id="state-title"></h3><p id="state-description"></p>
+                    <button id="state-action" class="button button-outline" type="button" hidden></button>
+                </div>
+
+                <div id="table-area">
+                    <div class="table-scroll">
+                        <table>
+                            <thead><tr><th scope="col">用户</th><th scope="col">登录账号</th><th scope="col">用户 ID</th><th scope="col" class="actions-heading">操作</th></tr></thead>
+                            <tbody id="user-rows"></tbody>
+                        </table>
+                    </div>
+                    <footer class="pagination">
+                        <span id="page-summary" class="page-summary"></span>
+                        <div class="page-controls" aria-label="分页">
+                            <button class="page-button" id="previous-page" type="button" aria-label="上一页">‹</button>
+                            <span id="page-indicator" class="page-indicator"></span>
+                            <button class="page-button" id="next-page" type="button" aria-label="下一页">›</button>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+            <p class="content-foot">用户资料来自当前系统数据库</p>
+        </main>
+    </div>
+</div>
+
+<dialog id="editor-dialog" class="dialog" aria-labelledby="editor-title">
+    <form id="user-form" class="dialog-content">
+        <div class="dialog-head"><div><p class="eyebrow">USER PROFILE</p><h2 id="editor-title">新增用户</h2></div><button class="icon-button" id="close-editor" type="button" aria-label="关闭">×</button></div>
+        <p class="dialog-description" id="editor-description">填写以下信息以创建用户。</p>
+        <div class="form-fields">
+            <label for="user-name">用户姓名 <span class="optional">选填</span></label>
+            <input id="user-name" name="name" type="text" maxlength="100" autocomplete="name" placeholder="请输入姓名">
+            <label for="user-account">登录账号 <span class="required">*</span></label>
+            <input id="user-account" name="account" type="text" maxlength="100" autocomplete="username" placeholder="请输入登录账号" required>
+            <label for="user-password">登录密码 <span id="password-required" class="required">*</span></label>
+            <input id="user-password" name="passwd" type="password" maxlength="100" autocomplete="new-password" placeholder="请输入密码" required>
+            <p id="password-hint" class="field-hint">创建用户时需要设置密码。</p>
+        </div>
+        <p id="form-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions"><button class="button button-outline" id="cancel-editor" type="button">取消</button><button class="button button-primary" id="save-user" type="submit">创建用户</button></div>
+    </form>
+</dialog>
+
+<dialog id="delete-dialog" class="dialog confirm-dialog" aria-labelledby="delete-title">
+    <div class="dialog-content"><div class="danger-icon" aria-hidden="true">!</div><h2 id="delete-title">确定删除用户？</h2><p id="delete-description" class="dialog-description"></p><p class="form-error" id="delete-error" role="alert" hidden></p>
+        <div class="dialog-actions"><button class="button button-outline" id="cancel-delete" type="button">取消</button><button class="button button-danger" id="confirm-delete" type="button">确认删除</button></div>
+    </div>
+</dialog>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
